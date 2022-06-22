@@ -1,0 +1,99 @@
+<view style="text-align: center" wx:if="{{pageLoading}}">
+	<t-loading
+	  theme="circular"
+	  size="40rpx"
+	  loading
+	  t-class-indicator="t-class-indicator"
+	>
+		<span slot="text" class="loading-text">加载中...</span>
+	</t-loading>
+</view>
+<!--顶部搜索区-->
+<view class="home-page-header">
+	<view class="search" bind:tap="navToSearchPage">
+		<t-search
+		  t-class-input="t-search__input"
+		  t-class-input-container="t-search__input-container"
+		  placeholder="扎染笔记本火热发售中"
+		  leftIcon=""
+		  disabled
+		>
+			<t-icon
+			  slot="left-icon"
+			  prefix="wr"
+			  name="search"
+			  size="40rpx"
+			  color="#bbb"
+			/>
+		</t-search>
+	</view>
+  <!--顶部轮播广告区-->
+	<view class="swiper-wrap">
+		<t-swiper
+		  wx:if="{{imgSrcs.length > 0}}"
+		  current="{{current}}"
+		  autoplay="{{autoplay}}"
+		  duration="{{duration}}"
+		  interval="{{interval}}"
+		  navigation="{{navigation}}"
+		>
+			<t-swiper-item wx:for="{{imgSrcs}}" wx:key="index">
+				<t-image src="{{item.img}}" t-class="t-image__swiper" bind:tap="navToActivityDetail" />
+			</t-swiper-item>
+		</t-swiper>
+	</view>
+</view>
+
+<!--头条滚动区-->
+<swiper class="swiperitem"
+autoplay="true" vertical="true" circular="true"
+bindchange="lineschange">
+  <block wx:for="{{Headlines}}" wx:key="item.id">
+    <swiper-item bindtap="linesclick">
+      <view class="cu-bar bg-white">
+        <view class="action">
+          <text class="swipertext"/>
+          <text>头条: {{item.title}}</text>
+        </view>
+      </view>
+    </swiper-item>
+  </block>
+</swiper>
+
+<!--功能宫格区-->
+<view class="functions">
+  <block wx:for="{{func_icon_list}}" wx:key="item.id">
+    <view class="function_item" bindtap="itemckcred"
+    data-index="{{item.id}}" data-itemtype="{{item.type}}">
+      <view class='icon-{{item.icon}} text-{{item.color}}'></view>
+      <text>{{item.name}}</text>
+    </view>
+  </block>
+</view>
+
+<view class="home-page-container">
+	<t-tabs
+	  t-class="t-tabs"
+	  t-class-active="t-class-item"
+	  t-class-track="t-class-track"
+	  defaultValue="{{0}}"
+	  bind:change="tabChangeHandle"
+	>
+		<t-tab-panel
+		  wx:for="{{tabList}}"
+		  wx:for-index="index"
+		  wx:key="index"
+		  label="{{item.text}}"
+		  value="{{item.key}}"
+		/>
+	</t-tabs>
+	<goods-list
+	  wr-class="goods-list-container"
+	  goodsList="{{goodsList}}"
+	  bind:click="goodListClickHandle"
+	  bind:addcart="goodListAddCartHandle"
+	/>
+	<load-more list-is-empty="{{!goodsList.length}}" status="{{goodsListLoadStatus}}" bind:retry="onReTry" />
+	<t-toast id="t-toast" />
+</view>
+
